@@ -1,0 +1,17 @@
+.bookshelf {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    position: relative;
+  }
+  
+  .shelf {
+    height: 20px;
+    background-color: #84481a; /* träfärg */
+    margin: 180px auto 0 auto;
+    width: 90%;
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* skugga under hyllan */
+    position: relative;
+    z-index: 2;
+  }
+  

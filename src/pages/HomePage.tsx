@@ -1,5 +1,6 @@
 import SearchBar from "../components/SearchBar";
 import woodTexture from "../assets/woodTexture.png";
+import Bookshelf from "../components/Bookshelf";
 
 const HomePage = () => {
   const handleSearch = (query: string) => {
@@ -17,6 +18,7 @@ const HomePage = () => {
       }}
     >
       <SearchBar onSearch={handleSearch} />
+      <Bookshelf />
       {/* Här kommer boklistan sen */}
     </div>
   );
