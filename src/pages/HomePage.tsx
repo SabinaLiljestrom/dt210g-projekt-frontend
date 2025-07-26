@@ -1,12 +1,27 @@
 import SearchBar from "../components/SearchBar";
 import woodTexture from "../assets/woodTexture.png";
 import Bookshelf from "../components/Bookshelf";
+import { searchBooks } from "../api/books";
+import { useEffect, useState } from "react";
+import type { Book } from "../types/Book";
 
 const HomePage = () => {
-  const handleSearch = (query: string) => {
-    console.log("Söker efter:", query);
-    // Här kommer anropa API sen
+  const [books, setBooks] = useState<Book[]>([]);
+
+  const handleSearch = async (query: string) => {
+    try {
+      const results = await searchBooks(query);
+      setBooks(results);
+      console.log("Böcker:", results);
+    } catch (err) {
+      console.error("Fel vid sökning:", err);
+    }
   };
+
+  // Hämta några böcker direkt
+  useEffect(() => {
+    handleSearch("popular fiction");
+  }, []);
 
   return (
     <div
@@ -18,8 +33,7 @@ const HomePage = () => {
       }}
     >
       <SearchBar onSearch={handleSearch} />
-      <Bookshelf />
-      {/* Här kommer boklistan sen */}
+      <Bookshelf books={books} />
     </div>
   );
 };
