@@ -6,21 +6,13 @@ type BookCardProps = {
 };
 
 const BookCard = ({ book }: BookCardProps) => {
-  if (!book.volumeInfo) return null;
-  const { title, authors, imageLinks } = book.volumeInfo;
-  const image = imageLinks?.thumbnail;
-  console.log("BookCard:", book);
+  const { title, authors } = book;
 
   return (
     <div className="book-card">
-      {image ? (
-        <img src={image} alt={title} className="book-card__image" />
-      ) : (
-        <div className="book-card__placeholder">Ingen bild</div>
-      )}
       <div className="book-card__info">
         <h3>{title}</h3>
-        {authors && <p>{authors.join(", ")}</p>}
+        {authors.length > 0 && <p>{authors.join(", ")}</p>}
       </div>
     </div>
   );

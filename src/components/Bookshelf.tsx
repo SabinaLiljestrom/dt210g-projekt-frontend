@@ -18,13 +18,28 @@ const Bookshelf = ({ books }: Props) => {
   return (
     <div className="bookshelf">
       {shelves.map((shelfBooks, index) => (
-        <div key={index} style={{ position: "relative" }}>
+        <div key={index} className="book-shelf-wrapper">
           <div className="book-row">
+            {shelfBooks.map((book) => (
+              <div key={book.id} className="book-wrapper">
+                {book.thumbnail ? (
+                  <img
+                    src={book.thumbnail}
+                    alt={book.title}
+                    className="book-image"
+                  />
+                ) : (
+                  <div className="book-placeholder">Ingen bild</div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="shelf" />
+          <div className="book-info-row">
             {shelfBooks.map((book) => (
               <BookCard key={book.id} book={book} />
             ))}
           </div>
-          <div className="shelf" />
         </div>
       ))}
     </div>
