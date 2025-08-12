@@ -5,6 +5,7 @@ import BookPage from "./pages/BookPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import MyReviewsPage from "./pages/MyReviewsPage";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 function App() {
   return (
@@ -15,7 +16,14 @@ function App() {
         <Route path="/book/:bookId" element={<BookPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/my-reviews" element={<MyReviewsPage />} />
+        <Route
+          path="/my-reviews"
+          element={
+            <ProtectedRoute>
+              <MyReviewsPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   );
