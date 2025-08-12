@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import SearchBar from "../componequery: stringnts/SearchBar";
+import SearchBar from "../components/SearchBar";
 import Bookshelf from "../components/Bookshelf";
 import type { Book } from "../types/Book";
 import { searchBooks } from "../api/books";
