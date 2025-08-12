@@ -12,7 +12,7 @@ const BookCard = ({ book }: BookCardProps) => {
     <div className="book-card">
       <div className="book-card__info">
         <h3>{title}</h3>
-        {authors.length > 0 && <p>{authors.join(", ")}</p>}
+        {authors.length > 0 && <p>Författare: {authors.join(", ")}</p>}
       </div>
     </div>
   );
