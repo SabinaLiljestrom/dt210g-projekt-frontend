@@ -2,35 +2,68 @@ import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import Bookshelf from "../components/Bookshelf";
 import type { Book } from "../types/Book";
-import { searchBooks } from "../api/books";
+import { searchBooks, flattenBooks, type BooksResponse } from "../api/books";
 import woodTexture from "../assets/woodTexture.png";
 
-const HomePage = () => {
+export default function HomePage() {
   const [books, setBooks] = useState<Book[]>([]);
+  const [total, setTotal] = useState(0);
+  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [start, setStart] = useState(0);
+  const limit = 20;
+  const [loading, setLoading] = useState(false);
 
-  //  Körs när sidan laddas
+  // initial load
   useEffect(() => {
-    const fetchStartBooks = async () => {
+    (async () => {
+      setLoading(true);
       try {
-        const results = await searchBooks(); // ingen sökterm längre
-        setBooks(results);
-      } catch (err) {
-        console.error("Fel vid hämtning av startböcker:", err);
+        const res: BooksResponse = await searchBooks(undefined, {
+          start: 0,
+          limit,
+        });
+        const flat = flattenBooks(res);
+        setBooks(flat.items);
+        setTotal(flat.total);
+        setStart(limit);
+      } finally {
+        setLoading(false);
       }
-    };
-
-    fetchStartBooks();
+    })();
   }, []);
 
-  //  Körs när man söker
-  const handleSearch = async (query: string) => {
+  const handleSearch = async (q: string) => {
+    setQuery(q || undefined);
+    setLoading(true);
     try {
-      const results = await searchBooks(query);
-      setBooks(results);
-    } catch (err) {
-      console.error("Fel vid sökning:", err);
+      const res = await searchBooks(q, {
+        start: 0,
+        limit,
+        highlightExact: true, // visa huvudträff när det är exakt titel
+      });
+      const flat = flattenBooks(res);
+      setBooks(flat.items);
+      setTotal(flat.total);
+      setStart(limit);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const loadMore = async () => {
+    setLoading(true);
+    try {
+      const res = await searchBooks(query, { start, limit });
+      const flat = flattenBooks(res);
+      setBooks((prev) => [...prev, ...flat.items]);
+      setStart(start + limit);
+      setTotal(flat.total);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const canLoadMore = books.length < total;
 
   return (
     <div
@@ -39,12 +72,25 @@ const HomePage = () => {
         backgroundRepeat: "repeat",
         backgroundSize: "200px",
         minHeight: "100vh",
+        paddingBottom: "3rem",
       }}
     >
       <SearchBar onSearch={handleSearch} />
       <Bookshelf books={books} />
+
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}
+      >
+        {canLoadMore && (
+          <button
+            onClick={loadMore}
+            disabled={loading}
+            style={{ padding: "0.6rem 1rem" }}
+          >
+            {loading ? "Laddar…" : "Ladda fler"}
+          </button>
+        )}
+      </div>
     </div>
   );
-};
-
-export default HomePage;
+}
