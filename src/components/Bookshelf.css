@@ -55,5 +55,7 @@
     text-align: center;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
   }
-s  
+  .book-wrapper { cursor: pointer; }
+  .book-info-link { text-decoration: none; color: inherit; }
+  .book-wrapper:hover .book-image { transform: translateY(-4px); }
   

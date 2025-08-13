@@ -1,14 +1,11 @@
-
+import { api } from "./client";
 import type { Book } from "../types/Book";
-export const searchBooks = async (): Promise<Book[]> => {
-  const response = await fetch("http://localhost:3018/books");
 
-  if (!response.ok) {
-    throw new Error("Kunde inte hämta böcker");
-  }
+export async function searchBooks(query?: string): Promise<Book[]> {
+  const q = query ? `?search=${encodeURIComponent(query)}` : "";
+  return api(`/books${q}`); 
+}
 
-  const data = await response.json();
-  return data;
-};
-
-
+export async function getBookById(id: string): Promise<Book> {
+  return api(`/books/${id}`);
+}
