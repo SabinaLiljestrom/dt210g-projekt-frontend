@@ -121,8 +121,21 @@ export default function MyReviewsPage() {
                   <div>
                     <div style={{ opacity: 0.8, fontSize: 14 }}>
                       Bok:&nbsp;
-                      <Link to={`/book/${r.bookId}`}>{r.bookId}</Link>
+                      <Link to={`/book/${r.bookId}`}>{r.bookTitle}</Link>
                     </div>
+                    {r.bookThumbnail ? (
+                      <img
+                        src={r.bookThumbnail}
+                        alt={r.bookTitle}
+                        style={{
+                          width: 40,
+                          height: 60,
+                          objectFit: "cover",
+                          borderRadius: 4,
+                          marginTop: 6,
+                        }}
+                      />
+                    ) : null}
                     {!isEditing ? (
                       <>
                         <div style={{ marginTop: 6 }}>
