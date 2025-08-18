@@ -4,6 +4,8 @@ import Bookshelf from "../components/Bookshelf";
 import type { Book } from "../types/Book";
 import { searchBooks, flattenBooks, type BooksResponse } from "../api/books";
 import woodTexture from "../assets/woodTexture.png";
+import Loading from "../components/Loading";
+import ErrorBanner from "../components/ErrorBanner";
 
 export default function HomePage() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -12,11 +14,13 @@ export default function HomePage() {
   const [start, setStart] = useState(0);
   const limit = 20;
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   // initial load
   useEffect(() => {
     (async () => {
       setLoading(true);
+      setError("");
       try {
         const res: BooksResponse = await searchBooks(undefined, {
           start: 0,
@@ -26,6 +30,8 @@ export default function HomePage() {
         setBooks(flat.items);
         setTotal(flat.total);
         setStart(limit);
+      } catch {
+        setError("Kunde inte ladda böcker just nu.");
       } finally {
         setLoading(false);
       }
@@ -35,6 +41,7 @@ export default function HomePage() {
   const handleSearch = async (q: string) => {
     setQuery(q || undefined);
     setLoading(true);
+    setError("");
     try {
       const res = await searchBooks(q, {
         start: 0,
@@ -45,6 +52,8 @@ export default function HomePage() {
       setBooks(flat.items);
       setTotal(flat.total);
       setStart(limit);
+    } catch {
+      setError("Kunde inte söka böcker.");
     } finally {
       setLoading(false);
     }
@@ -52,12 +61,15 @@ export default function HomePage() {
 
   const loadMore = async () => {
     setLoading(true);
+    setError("");
     try {
       const res = await searchBooks(query, { start, limit });
       const flat = flattenBooks(res);
       setBooks((prev) => [...prev, ...flat.items]);
       setStart(start + limit);
       setTotal(flat.total);
+    } catch {
+      setError("Kunde inte ladda fler böcker.");
     } finally {
       setLoading(false);
     }
@@ -76,20 +88,25 @@ export default function HomePage() {
       }}
     >
       <SearchBar onSearch={handleSearch} />
-      <Bookshelf books={books} />
+
+      {error && <ErrorBanner message={error} />}
+      {loading && books.length === 0 && <Loading />}
+
+      {!loading && books.length > 0 && <Bookshelf books={books} />}
 
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}
       >
-        {canLoadMore && (
+        {canLoadMore && !loading && (
           <button
             onClick={loadMore}
             disabled={loading}
             style={{ padding: "0.6rem 1rem" }}
           >
-            {loading ? "Laddar…" : "Ladda fler"}
+            Ladda fler
           </button>
         )}
+        {loading && books.length > 0 && <Loading />}
       </div>
     </div>
   );

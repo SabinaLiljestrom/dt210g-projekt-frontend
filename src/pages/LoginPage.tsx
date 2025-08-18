@@ -3,27 +3,33 @@ import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
 import woodTexture from "../assets/woodTexture.png";
+import ErrorBanner from "../components/ErrorBanner";
 import "./AuthForms.css";
 
 export default function LoginPage() {
-  const [username, setU] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setP] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const nav = useNavigate();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       const data = await api("/login", {
         method: "POST",
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ identifier, password }),
       });
-      login(data.token, username);
+
+      login(data.token, identifier);
       nav("/");
     } catch {
-      setError("Fel användarnamn eller lösenord.");
+      setError("Fel användarnamn/e-post eller lösenord.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,15 +47,16 @@ export default function LoginPage() {
     >
       <div className="auth-form-container">
         <h2>Logga in</h2>
-        {error && <p className="auth-error">{error}</p>}
+        {error && <ErrorBanner message={error} />}
 
         <form onSubmit={onSubmit} className="auth-form">
           <label>
-            Användarnamn
+            Användarnamn eller e-post
             <input
-              value={username}
-              onChange={(e) => setU(e.target.value)}
-              placeholder="Ditt användarnamn"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              placeholder="sabina eller sabina@exempel.se"
+              required
             />
           </label>
 
@@ -60,10 +67,13 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setP(e.target.value)}
               placeholder="••••••••"
+              required
             />
           </label>
 
-          <button type="submit">Logga in</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Loggar in…" : "Logga in"}
+          </button>
         </form>
 
         <p style={{ marginTop: "1rem", textAlign: "center" }}>

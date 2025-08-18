@@ -1,30 +1,48 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api/client";
+import { Eye, EyeOff } from "lucide-react";
 import woodTexture from "../assets/woodTexture.png";
+import ErrorBanner from "../components/ErrorBanner";
+import Loading from "../components/Loading";
 import "./AuthForms.css";
 
 export default function RegisterPage() {
   const [username, setU] = useState("");
   const [email, setE] = useState("");
   const [password, setP] = useState("");
+  const [confirmPassword, setCP] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState("");
-  const [ok, setOk] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
   const nav = useNavigate();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setOk("");
+    setSuccess("");
+
+    if (password !== confirmPassword) {
+      setError("Lösenorden matchar inte.");
+      return;
+    }
+
     try {
+      setLoading(true);
       await api("/register", {
         method: "POST",
         body: JSON.stringify({ username, email, password }),
       });
-      setOk("Konto skapat! Du kan logga in nu.");
-      setTimeout(() => nav("/login"), 1000);
+      setSuccess("Konto skapat! Du kan logga in nu.");
+      setTimeout(() => nav("/login"), 1500);
     } catch {
-      setError("Kunde inte skapa konto (användarnamn upptaget?).");
+      setError(
+        "Kunde inte skapa konto (användarnamn eller e-post kan vara upptaget)."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,17 +61,22 @@ export default function RegisterPage() {
       <div className="auth-form-container">
         <form onSubmit={onSubmit} className="auth-form">
           <h1>Skapa konto</h1>
-          {ok && <p className="success-message">{ok}</p>}
-          {error && <p className="error-message">{error}</p>}
-          <label>
+
+          {error && <ErrorBanner message={error} />}
+          {loading && <Loading />}
+          {success && <p className="success-message">{success}</p>}
+
+          <label className="input-label">
             Användarnamn
             <input
+              type="text"
               value={username}
               onChange={(e) => setU(e.target.value)}
               required
             />
           </label>
-          <label>
+
+          <label className="input-label">
             E-post
             <input
               type="email"
@@ -62,16 +85,59 @@ export default function RegisterPage() {
               required
             />
           </label>
-          <label>
+
+          <label className="input-label" style={{ position: "relative" }}>
             Lösenord
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setP(e.target.value)}
               required
+              style={{ paddingRight: "2rem" }}
             />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "65%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                color: "#444",
+              }}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </span>
           </label>
-          <button type="submit">Skapa konto</button>
+
+          <label className="input-label" style={{ position: "relative" }}>
+            Bekräfta lösenord
+            <input
+              type={showConfirm ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => setCP(e.target.value)}
+              required
+              style={{ paddingRight: "2rem" }}
+            />
+            <span
+              onClick={() => setShowConfirm(!showConfirm)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "65%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                color: "#444",
+              }}
+            >
+              {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+            </span>
+          </label>
+
+          <button type="submit" disabled={loading}>
+            Skapa konto
+          </button>
+
           <p className="auth-switch">
             Har du redan ett konto? <Link to="/login">Logga in här</Link>
           </p>
