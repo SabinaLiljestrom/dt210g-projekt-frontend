@@ -12,6 +12,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (t) setToken(t);
     if (u) setUsername(u);
   }, []);
+  //  Lyssna på globalt logout-event (t.ex. expired token)
+  useEffect(() => {
+    const handler = () => logout();
+    window.addEventListener("auth:logout", handler as EventListener);
+    return () =>
+      window.removeEventListener("auth:logout", handler as EventListener);
+  }, []);
 
   // Spara token + namn
   const login = (t: string, u?: string) => {

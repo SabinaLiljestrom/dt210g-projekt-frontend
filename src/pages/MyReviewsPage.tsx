@@ -4,6 +4,8 @@ import woodTexture from "../assets/woodTexture.png";
 import type { Review } from "../types/Review";
 import { useAuth } from "../hooks/useAuth";
 import { getMyReviews, updateReview, deleteReview } from "../api/reviews";
+import Loading from "../components/Loading";
+import ErrorBanner from "../components/ErrorBanner";
 
 export default function MyReviewsPage() {
   const { token } = useAuth();
@@ -77,7 +79,7 @@ export default function MyReviewsPage() {
     }
   };
 
-  if (loading) return <p style={{ padding: "2rem" }}>Laddar…</p>;
+  if (loading) return <Loading text="Hämtar dina recensioner…" />;
 
   return (
     <div
@@ -91,7 +93,7 @@ export default function MyReviewsPage() {
     >
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         <h1>Mina recensioner</h1>
-        {err && <p style={{ color: "crimson", marginBottom: "1rem" }}>{err}</p>}
+        {err && <ErrorBanner message={err} />}
 
         {(!token || reviews.length === 0) && !err ? (
           <p>Du har inga recensioner ännu.</p>

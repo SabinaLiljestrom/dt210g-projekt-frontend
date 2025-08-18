@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
 import woodTexture from "../assets/woodTexture.png";
@@ -13,6 +13,10 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const nav = useNavigate();
+  const location = useLocation();
+
+  const isExpired =
+    new URLSearchParams(location.search).get("reason") === "expired";
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +51,12 @@ export default function LoginPage() {
     >
       <div className="auth-form-container">
         <h2>Logga in</h2>
+        {/* Visas om man landat här pga utgången token */}
+        {isExpired && (
+          <ErrorBanner message="Din session har gått ut. Logga in igen för att fortsätta." />
+        )}
+
+        {/* Vanligt fel vid felaktiga uppgifter */}
         {error && <ErrorBanner message={error} />}
 
         <form onSubmit={onSubmit} className="auth-form">

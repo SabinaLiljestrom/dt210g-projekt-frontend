@@ -12,11 +12,20 @@ export async function api(path: string, options: RequestInit = {}) {
   
     // Skicka request till backend
     const res = await fetch(base + path, { ...options, headers });
+    if (!res.ok) {
+      // Fånga 401 med utgången token
+      if (res.status === 401) {
+        const text = await res.text().catch(() => "");
+        if (text.includes("Expired token")) {
+          // rensa lokalt och skicka till login med orsak
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+          window.location.href = "/login?reason=expired";
+          return Promise.reject(new Error("Expired token"));
+        }
+      }
+      throw new Error((await res.text().catch(() => res.statusText)) || "Error");
+    }
   
-    // Om fel → kasta fel
-    if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
-  
-    // Returnera svaret som JSON
     return res.json();
   }
-  
