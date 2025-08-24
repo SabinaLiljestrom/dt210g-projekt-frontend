@@ -1,3 +1,11 @@
+.book-wrapper,
+.book-info-link {
+  width: 140px;              
+  display: flex;           
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+}
 .bookshelf {
     padding-top: 4rem;
     padding-bottom: 4rem;
@@ -8,21 +16,20 @@
     margin-bottom: 3rem;
   }
   
-  .book-row {
-    display: flex;
-    justify-content: center;
-    align-items: end;
-    gap: 1rem;
-    height: 180px; 
-  }
+  .book-row,
+.book-info-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;                
+}
   
-  .book-image {
-    height: 160px;
-    margin-left: 25px;
-    margin-right: 25px;
-    object-fit: cover;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
+.book-image {
+  height: 160px;
+  margin: 0;                 
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: block;
+}
   
   .shelf {
     height: 20px;
