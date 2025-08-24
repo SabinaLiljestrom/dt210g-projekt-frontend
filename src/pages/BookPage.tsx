@@ -7,6 +7,7 @@ import type { Review } from "../types/Review";
 import { useAuth } from "../hooks/useAuth";
 import Loading from "../components/Loading";
 import ErrorBanner from "../components/ErrorBanner";
+import DOMPurify from "dompurify";
 
 export default function BookPage() {
   const { id } = useParams<{ id: string }>();
@@ -133,7 +134,12 @@ export default function BookPage() {
                       </p>
                     ) : null}
                     {book.description ? (
-                      <p style={{ marginTop: 12 }}>{book.description}</p>
+                      <div
+                        style={{ marginTop: 12 }}
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(book.description),
+                        }}
+                      />
                     ) : (
                       <p style={{ marginTop: 12, opacity: 0.8 }}>
                         Ingen beskrivning.
@@ -141,7 +147,6 @@ export default function BookPage() {
                     )}
                   </div>
                 </div>
-
                 {/* Recensioner */}
                 <div>
                   <h2 style={{ marginBottom: "0.5rem" }}>Recensioner</h2>

@@ -1,69 +1,30 @@
-# React + TypeScript + Vite
+# Bokhyllam – Sabina React-applikation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Detta är frontend-delen av "Bokhyllan". En applikation där användaren kna söka efter böcker, läsa detaljer och skriva recensioner. Applikationen är byggd som en Single Page Application (SPA) med React och TypeScript.
 
-Currently, two official plugins are available:
+## Teknologier
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- TypeScript
+- React Router
+- JWT-autentisering
+- CSS för styling
 
-## Expanding the ESLint configuration
+## Kom igång
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. Klona projektet
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+git clone https://github.com/SabinaLiljestrom/dt210g-projekt-frontend
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### 2. Installera beroenden
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+npm install
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 3. Starta utvecklingsservern:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+npm start
+Observera: Frontend-appen förväntar sig att backend-API:t körs på http://localhost:3018.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+#### Skapad av
+
+Sabina Liljeström i kursen dt210g – Fördjupad frontend-utveckling vid Mittuniversitetet.
