@@ -38,16 +38,12 @@ export default function HomePage() {
     })();
   }, []);
 
-  const handleSearch = async (q: string) => {
+  const handleSearch = async (q: string, by: "all" | "title" | "author") => {
     setQuery(q || undefined);
     setLoading(true);
     setError("");
     try {
-      const res = await searchBooks(q, {
-        start: 0,
-        limit,
-        highlightExact: true, // visa huvudträff när det är exakt titel
-      });
+      const res = await searchBooks(q, { start: 0, limit, by });
       const flat = flattenBooks(res);
       setBooks(flat.items);
       setTotal(flat.total);
