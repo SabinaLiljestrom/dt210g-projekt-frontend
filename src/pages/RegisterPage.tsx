@@ -37,10 +37,12 @@ export default function RegisterPage() {
       });
       setSuccess("Konto skapat! Du kan logga in nu.");
       setTimeout(() => nav("/login"), 1500);
-    } catch {
-      setError(
-        "Kunde inte skapa konto (användarnamn eller e-post kan vara upptaget)."
-      );
+    } catch (err: any) {
+      if (err?.status === 400 || err?.status === 409) {
+        setError(err.message);
+      } else {
+        setError(err?.message || "Serverfel – försök igen senare.");
+      }
     } finally {
       setLoading(false);
     }
@@ -71,7 +73,10 @@ export default function RegisterPage() {
             <input
               type="text"
               value={username}
-              onChange={(e) => setU(e.target.value)}
+              onChange={(e) => {
+                setU(e.target.value);
+                if (error) setError(""); // rensa fel så fort man börjar skriva igen
+              }}
               required
             />
           </label>
@@ -81,7 +86,10 @@ export default function RegisterPage() {
             <input
               type="email"
               value={email}
-              onChange={(e) => setE(e.target.value)}
+              onChange={(e) => {
+                setE(e.target.value);
+                if (error) setError("");
+              }}
               required
             />
           </label>
@@ -91,7 +99,10 @@ export default function RegisterPage() {
             <input
               type={showPassword ? "text" : "password"}
               value={password}
-              onChange={(e) => setP(e.target.value)}
+              onChange={(e) => {
+                setP(e.target.value);
+                if (error) setError("");
+              }}
               required
               style={{ paddingRight: "2rem" }}
             />
